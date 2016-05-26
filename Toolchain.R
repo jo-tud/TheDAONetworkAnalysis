@@ -29,8 +29,13 @@ knownWallets <- read.table(text = " addr owner
 3   0x40b9b889a21ff1534d018d71dc406122ebcf3f5a     gatecoin 
 ",header = TRUE,sep = "",colClasses = c("addr"="character", "owner"="character"))
 
+# enrich transactions
+t$genesis <- t$from %in% genesisAccounts$to
+t$info<-knownWallets$owner[match(t$from,knownWallets$addr)]
+
 # Transactions around TheDAO
 tDAO <- t[t$to==TheDAOAddr,] # contains transactions that go to TheDAO
+
 tDAO_l2 <- subset(t, t$to %in% tDAO$from) # contains transactions that had adresses from tDAO as a target
 tDAO_l3 <- subset(t, t$to %in% tDAO_l2$from) # contains transactions that had dresses from tDAO_l2 as a target
 

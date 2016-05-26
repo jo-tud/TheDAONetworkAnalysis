@@ -1,8 +1,5 @@
 library(rgexf)
 
-TheDAOAddr = '0xbb9bc244d798123fde783fcc1c72d3bb8c189413'
-tDAO <- t[t$to==TheDAOAddr,] # contains transactions that go to TheDAO
-
 # Create Graph
 nodes <- data.frame(from = t$from, to = t$to, value = t$value, ts = t$ts)
 g <- igraph::graph.data.frame(nodes, directed = T)

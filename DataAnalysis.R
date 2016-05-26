@@ -24,7 +24,7 @@ ggplot(top10Contributors, aes(x=from, y=value))+geom_bar(stat="identity")
 # TODO: create wealth distribution diagram like https://plot.ly/~CoreyPetty/59/percentage-vs-investor-group
 
 # some values
-allEther <- sum(tDAO$value) # all ether in TheDAO
+allDAOEther <- sum(tDAO$value) # all ether in TheDAO
 numberOfTransactions <- nrow(tDAO) # number of Transactions going into TheDAO
 uniqueContributors <- length(unique(tDAO$from)) # number of unique addresses that contribute to TheDAO
 
@@ -32,6 +32,12 @@ uniqueContributors <- length(unique(tDAO$from)) # number of unique addresses tha
 summary(tDAO$value)
 boxplot(tDAO$value)
 
-# Origin
-# Prozent aus Genesis, aus Mining, aus Exchanges
-origin <- contributors %>% filter(from %in% knownWallets$addr) %>% mutate(owner=knownWallets$owner, perc = value/allEther)
+# Genesis Addresses
+genesisEther <- sum(genesisAccounts$value) # all genesis ether
+genesisEtherDAO <- sum(tDAO$value[tDAO$genesis==TRUE]) # amount of GENESIS ETHER sent to the DAO
+numberOfGenesisAddr <- length(tDAO$genesis[tDAO$genesis==TRUE])
+percGenesisEtherInDAO <- genesisEtherDAO/allDAOEther
+
+# Known Addresses
+tDAOknown <- tDAO[which(!is.na(tDAO$info)),]
+tDAOknownSummarized <-group_by(tDAOknown,info) %>% summarize(value=sum(value)) %>% mutate(perc=value/allDAOEther) # how much have the known addresses invested?
